@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ManagementController;
-use App\Http\Controllers\QuestionBankController;
+// use App\Http\Controllers\QuestionBankController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\CouncilController;
 use App\Http\Controllers\EvaluationController;
@@ -131,60 +131,60 @@ Route::prefix('management')
     Route::post('/room/{operation}/{id}', [ManagementController::class, 'room']);
 });
 
-Route::prefix('qbank')
-    ->middleware([AuthenticateMiddleware::class, EnsureUserHasRoleMiddleware::class.':editor'])
-    ->group(function () {
-    Route::get('/', [ManagementController::class, 'index'])->name('dashboard');
-    // questions TN1
-    Route::get('/question/TN1', [QuestionBankController::class, 'questionTN1']);
-    Route::get('/question/TN1/{operation}', [QuestionBankController::class, 'questionTN1']);
-    Route::get('/question/TN1/{operation}/{id}', [QuestionBankController::class, 'questionTN1']);
-    Route::post('/question/TN1', [QuestionBankController::class, 'questionTN1']);
-    Route::post('/question/TN1/{operation}', [QuestionBankController::class, 'questionTN1']);
-    Route::post('/question/TN1/{operation}/{id}', [QuestionBankController::class, 'questionTN1']);
+// Route::prefix('qbank')
+//     ->middleware([AuthenticateMiddleware::class, EnsureUserHasRoleMiddleware::class.':editor'])
+//     ->group(function () {
+//     Route::get('/', [ManagementController::class, 'index'])->name('dashboard');
+//     // questions TN1
+//     Route::get('/question/TN1', [QuestionBankController::class, 'questionTN1']);
+//     Route::get('/question/TN1/{operation}', [QuestionBankController::class, 'questionTN1']);
+//     Route::get('/question/TN1/{operation}/{id}', [QuestionBankController::class, 'questionTN1']);
+//     Route::post('/question/TN1', [QuestionBankController::class, 'questionTN1']);
+//     Route::post('/question/TN1/{operation}', [QuestionBankController::class, 'questionTN1']);
+//     Route::post('/question/TN1/{operation}/{id}', [QuestionBankController::class, 'questionTN1']);
 
-    // questions TNN
-    Route::get('/question/TNN', [QuestionBankController::class, 'questionTNN']);
-    Route::get('/question/TNN/{operation}', [QuestionBankController::class, 'questionTNN']);
-    Route::get('/question/TNN/{operation}/{id}', [QuestionBankController::class, 'questionTNN']);
-    Route::post('/question/TNN', [QuestionBankController::class, 'questionTNN']);
-    Route::post('/question/TNN/{operation}', [QuestionBankController::class, 'questionTNN']);
-    Route::post('/question/TNN/{operation}/{id}', [QuestionBankController::class, 'questionTNN']);
+//     // questions TNN
+//     Route::get('/question/TNN', [QuestionBankController::class, 'questionTNN']);
+//     Route::get('/question/TNN/{operation}', [QuestionBankController::class, 'questionTNN']);
+//     Route::get('/question/TNN/{operation}/{id}', [QuestionBankController::class, 'questionTNN']);
+//     Route::post('/question/TNN', [QuestionBankController::class, 'questionTNN']);
+//     Route::post('/question/TNN/{operation}', [QuestionBankController::class, 'questionTNN']);
+//     Route::post('/question/TNN/{operation}/{id}', [QuestionBankController::class, 'questionTNN']);
 
-    // questions TNC
-    Route::get('/question/TNC', [QuestionBankController::class, 'questionTNC']);
-    Route::get('/question/TNC/{operation}', [QuestionBankController::class, 'questionTNC']);
-    Route::get('/question/TNC/{operation}/{id}', [QuestionBankController::class, 'questionTNC']);
-    Route::post('/question/TNC', [QuestionBankController::class, 'questionTNC']);
-    Route::post('/question/TNC/{operation}', [QuestionBankController::class, 'questionTNC']);
-    Route::post('/question/TNC/{operation}/{id}', [QuestionBankController::class, 'questionTNC']);
+//     // questions TNC
+//     Route::get('/question/TNC', [QuestionBankController::class, 'questionTNC']);
+//     Route::get('/question/TNC/{operation}', [QuestionBankController::class, 'questionTNC']);
+//     Route::get('/question/TNC/{operation}/{id}', [QuestionBankController::class, 'questionTNC']);
+//     Route::post('/question/TNC', [QuestionBankController::class, 'questionTNC']);
+//     Route::post('/question/TNC/{operation}', [QuestionBankController::class, 'questionTNC']);
+//     Route::post('/question/TNC/{operation}/{id}', [QuestionBankController::class, 'questionTNC']);
 
-    Route::get('/question/TNC-detail/{cloze_id?}', [QuestionBankController::class, 'questionTNCDetails']);
-    Route::get('/question/TNC-detail/{cloze_id?}/{operation}', [QuestionBankController::class, 'questionTNCDetails']);
-    Route::get('/question/TNC-detail/{cloze_id?}/{operation}/{id}', [QuestionBankController::class, 'questionTNCDetails']);
-    Route::post('/question/TNC-detail/{cloze_id?}', [QuestionBankController::class, 'questionTNCDetails']);
-    Route::post('/question/TNC-detail/{cloze_id?}/{operation}', [QuestionBankController::class, 'questionTNCDetails']);
-    Route::post('/question/TNC-detail/{cloze_id?}/{operation}/{id}', [QuestionBankController::class, 'questionTNCDetails']);
+//     Route::get('/question/TNC-detail/{cloze_id?}', [QuestionBankController::class, 'questionTNCDetails']);
+//     Route::get('/question/TNC-detail/{cloze_id?}/{operation}', [QuestionBankController::class, 'questionTNCDetails']);
+//     Route::get('/question/TNC-detail/{cloze_id?}/{operation}/{id}', [QuestionBankController::class, 'questionTNCDetails']);
+//     Route::post('/question/TNC-detail/{cloze_id?}', [QuestionBankController::class, 'questionTNCDetails']);
+//     Route::post('/question/TNC-detail/{cloze_id?}/{operation}', [QuestionBankController::class, 'questionTNCDetails']);
+//     Route::post('/question/TNC-detail/{cloze_id?}/{operation}/{id}', [QuestionBankController::class, 'questionTNCDetails']);
 
-    // questions TLN
-    Route::get('/question/TLN', [QuestionBankController::class, 'questionTLN']);
-    Route::get('/question/TLN/{operation}', [QuestionBankController::class, 'questionTLN']);
-    Route::get('/question/TLN/{operation}/{id}', [QuestionBankController::class, 'questionTLN']);
-    Route::post('/question/TLN', [QuestionBankController::class, 'questionTLN']);
-    Route::post('/question/TLN/{operation}', [QuestionBankController::class, 'questionTLN']);
-    Route::post('/question/TLN/{operation}/{id}', [QuestionBankController::class, 'questionTLN']);
+//     // questions TLN
+//     Route::get('/question/TLN', [QuestionBankController::class, 'questionTLN']);
+//     Route::get('/question/TLN/{operation}', [QuestionBankController::class, 'questionTLN']);
+//     Route::get('/question/TLN/{operation}/{id}', [QuestionBankController::class, 'questionTLN']);
+//     Route::post('/question/TLN', [QuestionBankController::class, 'questionTLN']);
+//     Route::post('/question/TLN/{operation}', [QuestionBankController::class, 'questionTLN']);
+//     Route::post('/question/TLN/{operation}/{id}', [QuestionBankController::class, 'questionTLN']);
 
-    // questions LNN
-    Route::get('/question/LNN', [QuestionBankController::class, 'questionLNN']);
-    Route::get('/question/LNN/{operation}', [QuestionBankController::class, 'questionLNN']);
-    Route::get('/question/LNN/{operation}/{id}', [QuestionBankController::class, 'questionLNN']);
-    Route::post('/question/LNN', [QuestionBankController::class, 'questionLNN']);
-    Route::post('/question/LNN/{operation}', [QuestionBankController::class, 'questionLNN']);
-    Route::post('/question/LNN/{operation}/{id}', [QuestionBankController::class, 'questionLNN']);
+//     // questions LNN
+//     Route::get('/question/LNN', [QuestionBankController::class, 'questionLNN']);
+//     Route::get('/question/LNN/{operation}', [QuestionBankController::class, 'questionLNN']);
+//     Route::get('/question/LNN/{operation}/{id}', [QuestionBankController::class, 'questionLNN']);
+//     Route::post('/question/LNN', [QuestionBankController::class, 'questionLNN']);
+//     Route::post('/question/LNN/{operation}', [QuestionBankController::class, 'questionLNN']);
+//     Route::post('/question/LNN/{operation}/{id}', [QuestionBankController::class, 'questionLNN']);
 
-    //question preview
-    Route::get('/preview/{question_id?}', [QuestionBankController::class, 'questionPreview']);
-});
+//     //question preview
+//     Route::get('/preview/{question_id?}', [QuestionBankController::class, 'questionPreview']);
+// });
 
 Route::prefix('test')
     ->middleware([AuthenticateMiddleware::class, EnsureUserHasRoleMiddleware::class.':moderator'])
