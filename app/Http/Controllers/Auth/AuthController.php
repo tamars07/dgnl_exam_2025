@@ -53,10 +53,10 @@ class AuthController extends Controller
             foreach($user->roles as $role){
                 // dd($role);
                 switch($role->name){
-                    // case 'EDITOR':
-                    //     return redirect('/qbank');
-                    //     break;
-                    case 'ADMIN': case 'MODERATOR': case 'CHAIRMAN':
+                    case 'ADMIN': case 'EDITOR':
+                        return redirect('/qbank');
+                        break;
+                    case 'MODERATOR': case 'CHAIRMAN':
                         return redirect('/exam');
                         break;
                 }
