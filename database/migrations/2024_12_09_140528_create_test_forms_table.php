@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('code')->nullable();
             $table->string('name');
             // $table->text('desc')->nullable();
-            $table->unsignedInteger('time')->comment('thời gian làm bài');
+            $table->unsignedInteger('time')->default(0)->comment('thời gian làm bài');
             $table->unsignedInteger('no_questions')->default(0)->comment('số lượng câu hỏi');
             $table->unsignedInteger('no_parts')->default(0)->comment('số phần thi');
             $table->boolean('status')->default(true);

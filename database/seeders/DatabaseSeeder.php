@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
             CompetencySeeder::class,
             TaxonomySeeder::class,
             TopicSeeder::class,
-            MonitorSeeder::class,
+            // MonitorSeeder::class,
             RoomHCMUESeeder::class,
             RoomHUITSeeder::class,
             RoomHUEduSeeder::class,

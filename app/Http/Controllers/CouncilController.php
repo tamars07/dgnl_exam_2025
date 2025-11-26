@@ -308,7 +308,7 @@ class CouncilController extends Controller
 
         $crud = new GroceryCrud($this->config, $this->database);
         $crud->setTable($table)
-            ->where('monitors.deleted_at IS NULL AND monitors.role_id <> 1 AND monitors.role_id <> 8')
+            ->where('monitors.deleted_at IS NULL AND monitors.id <> 1 AND monitors.role_id <> 8')
             ->setSubject($title, 'Quản lý ' . $title)
             ->columns(['code', 'password' , 'name', 'role_id', 'organization_id', 'status'])
             ->setRead()

@@ -598,18 +598,18 @@ class ExamController extends BaseController
             $examinee_test_mix = ExamineeTestMix::where('examinee_test_code',$examinee_account)->first();
             $test_mix = TestMix::find($examinee_test_mix->test_mix_id);
             $test_mix_content = json_decode($test_mix->content, TRUE);
-            foreach($test_mix_content as $part_id => $questions){
-                foreach($questions as $location => $question){
-                    if($location == 13){
-                        foreach($question as $question_id => $option_order){
-                            $_question = Question::find($question_id);
-                            $context_question = Question::find($_question->cloze_id);
-                            $context_content = $context_question->content . '<br>' . $context_question->post_content;
-                        }
-                        break;
-                    }
-                }
-            }
+            // foreach($test_mix_content as $part_id => $questions){
+            //     foreach($questions as $location => $question){
+            //         if($location == 13){
+            //             foreach($question as $question_id => $option_order){
+            //                 $_question = Question::find($question_id);
+            //                 $context_question = Question::find($_question->cloze_id);
+            //                 $context_content = $context_question->content . '<br>' . $context_question->post_content;
+            //             }
+            //             break;
+            //         }
+            //     }
+            // }
 
             // $examinee_assigment = ExaminerAssignment::where('examinee_test_code',$examinee_account)->first();
             $examinee_answers = AnswerKey::where('examinee_test_code',$examinee_account)->orderBy('matrix_location','asc')->get();

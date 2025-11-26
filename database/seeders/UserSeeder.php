@@ -26,10 +26,31 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        //super admin role
+        $username = 'admin';
+        $fullname = 'Super Admin';
+        $password = '123456';
+        $role_id = 1;
+        $org_id = 1;
+        $user = User::factory()->create([
+            'email' => $username,
+            'name' => $fullname,
+            'password' => $password,
+        ]);
+        $user->roles()->attach($role_id);
+        Monitor::create([
+            'code' => $username,
+            'name' => $fullname,
+            'password' => $password,
+            'role_id' => $role_id,
+            'user_id' => $user->id,
+            'organization_id' => $org_id,
+        ]);
+
         //admin role
         $username = 'quantri';
         $fullname = 'Quản trị hệ thống';
-        $password = '123456';
+        $password = $this->getRandomString(6);
         $role_id = 1;
         $org_id = 1;
         $user = User::factory()->create([

@@ -53,10 +53,11 @@ class AuthController extends Controller
             foreach($user->roles as $role){
                 // dd($role);
                 switch($role->name){
-                    case 'ADMIN': case 'EDITOR':
+                    // case 'ADMIN': 
+                    case 'EDITOR':
                         return redirect('/qbank');
                         break;
-                    case 'MODERATOR': case 'CHAIRMAN':
+                    case 'ADMIN': case 'MODERATOR': case 'CHAIRMAN':
                         return redirect('/exam');
                         break;
                 }
@@ -111,7 +112,7 @@ class AuthController extends Controller
     public function logout(Request $request): RedirectResponse
     {
         // Session::flush();
-        Auth::logout();
+        auth()->guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
   
