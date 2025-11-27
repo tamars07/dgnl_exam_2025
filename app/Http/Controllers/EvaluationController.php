@@ -191,7 +191,7 @@ class EvaluationController extends Controller
 			->unsetPrint()->unsetExport();
 
         $crud->setActionButton('Tiêu chí chấm', 'fa fa-reorder', function ($row) {
-            return '/evaluation/rubric-criteria/' . $row->id;
+            return url('/evaluation/rubric-criteria/' . $row->id);
         }, true);
 
         $crud->callbackAddForm(function ($data) {
@@ -435,7 +435,7 @@ class EvaluationController extends Controller
         // });
 
         $crud->setActionButton('Đồng bộ bài thi', 'fa fa-cloud-upload', function ($row) {
-            return '/evaluation/sync-exam-data/' . $row->code;
+            return url('/evaluation/sync-exam-data/' . $row->code);
         }, false);
         // $crud->setActionButton('Xuất CBCT', 'fa fa-file-excel-o', function ($row) {
         //     return '/export/xlsx/monitor-council/' . $row->id;
@@ -526,7 +526,7 @@ class EvaluationController extends Controller
         
         // return $this->_example_output($output, $title, $cat, $subcat);
 
-        $form_url = '/evaluation/import-exam-data';
+        $form_url = url('/evaluation/import-exam-data');
         
         return $this->_example_output($output, $title, $cat, $subcat, [
             'form_url' => $form_url,
@@ -714,7 +714,7 @@ class EvaluationController extends Controller
         $cat = 'evaluation';
         $subcat = 'answer-key';
         $table = _ANSWER_KEY;
-        $form_url = '/evaluation/import-answer-key';
+        $form_url = url('/evaluation/import-answer-key');
 
 
         $crud = new GroceryCrud($this->config, $this->database);
@@ -779,7 +779,7 @@ class EvaluationController extends Controller
         $subcat = 'answer-key';
         // $table = _ANSWER_KEY;
         $table = _QUESTION;
-        $form_url = '/evaluation/import-answer-key';
+        $form_url = url('/evaluation/import-answer-key');
 
 
         $crud = new GroceryCrud($this->config, $this->database);
@@ -1153,16 +1153,16 @@ class EvaluationController extends Controller
 //		->unsetExport();
 
         $crud->setActionButton('Chi tiết phân công', 'fa fa-eye', function ($row) {
-            return '/evaluation/detail-assign-examiner/' . $row->code;
+            return url('/evaluation/detail-assign-examiner/' . $row->code);
         }, true);
         $crud->setActionButton('Bảng chênh lệch', 'fa fa-file-excel-o', function ($row) {
-            return '/export/xlsx/examiner-pair-diff/' . $row->id;
+            return url('/export/xlsx/examiner-pair-diff/' . $row->id);
         }, false);
         // $crud->setActionButton('Bảng tổng hợp', 'fa fa-file-excel-o', function ($row) {
         //     return '/evaluation/detail-assign-examiner/' . $row->code;
         // }, false);
         $crud->setActionButton('Bảng chi tiết', 'fa fa-file-excel-o', function ($row) {
-            return '/export/xlsx/examiner-pair/' . $row->id;
+            return url('/export/xlsx/examiner-pair/' . $row->id);
         }, false);
 
 
@@ -1310,7 +1310,7 @@ class EvaluationController extends Controller
 			->unsetPrint()->unsetExport();
 
         $crud->setActionButton('Chi tiết', 'fa fa-eye', function ($row) {
-            return '/evaluation/view-detail-assign-examiner/' . $row->examiner_pair_id . '/' . $row->examiner_id;
+            return url('/evaluation/view-detail-assign-examiner/' . $row->examiner_pair_id . '/' . $row->examiner_id);
         }, true);
         
         $crud->callbackColumn('no_assigned_test', function ($value, $row) use($examiner_pair) {
@@ -1394,7 +1394,7 @@ class EvaluationController extends Controller
 			->unsetPrint()->unsetExport();
 
         $crud->setActionButton('Chi tiết', 'fa fa-eye', function ($row) {
-            return '/evaluation/view-detail-assign-examiner/' . $row->examiner_pair_id . '/' . $row->examiner_id;
+            return url('/evaluation/view-detail-assign-examiner/' . $row->examiner_pair_id . '/' . $row->examiner_id);
         }, false);
         // $crud->callbackAddForm(function ($data) {
         //     $count = ExaminerPair::all()->count();
@@ -1456,13 +1456,13 @@ class EvaluationController extends Controller
 		    ->unsetPrint();
 
         $crud->setActionButton('Chi tiết phân công', 'fa fa-eye', function ($row) {
-            return '/evaluation/detail-assign-reviewer/' . $row->code;
+            return url('/evaluation/detail-assign-reviewer/' . $row->code);
         }, true);
         $crud->setActionButton('Bảng chênh lệch', 'fa fa-file-excel-o', function ($row) {
-            return '/export/xlsx/reviewer-pair-diff/' . $row->id;
+            return url('/export/xlsx/reviewer-pair-diff/' . $row->id);
         }, false);
         $crud->setActionButton('Bảng chi tiết', 'fa fa-file-excel-o', function ($row) {
-            return '/export/xlsx/reviewer-pair/' . $row->id;
+            return url('/export/xlsx/reviewer-pair/' . $row->id);
         }, false);
 
 
@@ -1594,7 +1594,7 @@ class EvaluationController extends Controller
 			->unsetPrint()->unsetExport();
 
         $crud->setActionButton('Chi tiết', 'fa fa-eye', function ($row) {
-            return '/evaluation/view-detail-assign-reviewer/' . $row->reviewer_pair_id . '/' . $row->reviewer_id;
+            return url('/evaluation/view-detail-assign-reviewer/' . $row->reviewer_pair_id . '/' . $row->reviewer_id);
         }, false);
         // $crud->callbackAddForm(function ($data) {
         //     $count = ExaminerPair::all()->count();
@@ -1835,10 +1835,10 @@ class EvaluationController extends Controller
         // });
 
         $crud->setActionButton('Chấm thi HĐ', 'fa fa-gavel ', function ($row) {
-            return '/evaluation/auto-marking-all/' . $row->code;
+            return url('/evaluation/auto-marking-all/' . $row->code);
         }, false);
         $crud->setActionButton('Chi tiết bài thi', 'fa fa-info-circle ', function ($row) {
-            return '/evaluation/examinee-tests/' . $row->code;
+            return url('/evaluation/examinee-tests/' . $row->code);
         }, false);
         // $crud->setActionButton('Xuất CBCT', 'fa fa-file-excel-o', function ($row) {
         //     return '/export/xlsx/monitor-council/' . $row->id;
@@ -1906,11 +1906,11 @@ class EvaluationController extends Controller
 
 
         $crud->setActionButton('Chi tiết', 'fa fa-eye', function ($row) {
-            return '/evaluation/detail-examinee-answers/' . $row->examinee_test_code;
+            return url('/evaluation/detail-examinee-answers/' . $row->examinee_test_code);
         }, true);
         $crud->setActionButtonMultiple('Chấm thi', 'fa fa-check', '/evaluation/auto-making-examinee-answers', false);
         $crud->setActionButton('Chấm thi', 'fa fa-check', function ($row) {
-            return '/evaluation/auto-making-examinee-answer/' . $row->id;
+            return url('/evaluation/auto-making-examinee-answer/' . $row->id);
         }, false);
 
         $crud->setCsrfTokenName('_token');
@@ -1963,11 +1963,11 @@ class EvaluationController extends Controller
 			->unsetPrint()->unsetExport();
 
         $crud->setActionButton('Chi tiết', 'fa fa-eye', function ($row) {
-            return '/evaluation/detail-examinee-answers/' . $row->examinee_test_code;
+            return url('/evaluation/detail-examinee-answers/' . $row->examinee_test_code);
         }, true);
         $crud->setActionButtonMultiple('Chấm thi', 'fa fa-check', '/evaluation/auto-making-examinee-answers', false);
         $crud->setActionButton('Chấm thi', 'fa fa-check', function ($row) {
-            return '/evaluation/auto-making-examinee-answer/' . $row->id;
+            return url('/evaluation/auto-making-examinee-answer/' . $row->id);
         }, false);
 
         $crud->setCsrfTokenName('_token');
