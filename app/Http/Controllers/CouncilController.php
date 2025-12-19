@@ -286,7 +286,7 @@ class CouncilController extends Controller
         $output = $crud->render();
         
         // return $this->_example_output($output, $title, $cat, $subcat);
-        $form_url = '/exam/import-room/';
+        $form_url = url('/exam/import-room/');
         $organizations = Organization::where('status',1)->get();
         
         return $this->_example_output($output, $title, $cat, $subcat, [
@@ -308,7 +308,7 @@ class CouncilController extends Controller
 
         $crud = new GroceryCrud($this->config, $this->database);
         $crud->setTable($table)
-            ->where('monitors.deleted_at IS NULL AND monitors.id <> 1 AND monitors.role_id <> 8')
+            ->where('monitors.deleted_at IS NULL AND monitors.role_id <> 1 AND monitors.role_id <> 8')
             ->setSubject($title, 'Quản lý ' . $title)
             ->columns(['code', 'password' , 'name', 'role_id', 'organization_id', 'status'])
             ->setRead()
@@ -526,13 +526,13 @@ class CouncilController extends Controller
         });
 
         $crud->setActionButton('Export', 'fa fa-download', function ($row) {
-            return '/exam/export-council/' . $row->id;
+            return url('/exam/export-council/' . $row->id);
         }, true);
         // $crud->setActionButton('Xuất CBCT', 'fa fa-users', function ($row) {
         //     return '/export/docx/monitor-council/' . $row->id;
         // }, true);
         $crud->setActionButton('Xuất CBCT', 'fa fa-file-excel-o', function ($row) {
-            return '/export/xlsx/monitor-council/' . $row->id;
+            return url('/export/xlsx/monitor-council/' . $row->id);
         }, true);
 
         $crud->setCsrfTokenName('_token');
@@ -542,7 +542,7 @@ class CouncilController extends Controller
         
         // return $this->_example_output($output, $title, $cat, $subcat);
 
-        $form_url = '/exam/import-council';
+        $form_url = url('/exam/import-council');
         
         return $this->_example_output($output, $title, $cat, $subcat, [
             'form_url' => $form_url,
@@ -614,8 +614,15 @@ class CouncilController extends Controller
 			->unsetPrint()->unsetExport();
         
         $crud->setActionButton('Sao lưu', 'fa fa-download', function ($row) {
-            return '/exam/export-council-turn/' . $row->code;
+            return url('/exam/export-council-turn/' . $row->code);
         }, true);
+        // $crud->setActionButton('Dọn dẹp', 'fa fa-trash', function ($row) {
+        //     return '/exam/flush-council-turn/' . $row->code;
+        // }, true);
+        $crud->setActionButton('Dọn dẹp', 'fa fa-trash', function ($row) {
+            $url = url('exam/flush-council-turn/' . $row->code);
+            return "javascript:if(confirm('Bạn có chắc chắn muốn dọn dẹp kỳ {$row->code}?')){ window.location.href='$url'; }";
+        }, false);
         $crud->callbackColumn('no_rooms', function ($value, $row) use($council) {
             $html = "<div class=\"gc-data-container-text\">Số lượng phòng thi: " . $value . "</div><br>";
             $html .= "<div class=\"gc-data-container-text\">Giờ hiện tại: " . now() . "</div><br>";
@@ -907,16 +914,16 @@ class CouncilController extends Controller
         // $crud->setActionButton('Đổi mật khẩu', 'fa fa-key', function ($row) {
         //     return '/view_avatar/' . $row->council_turn_code . '/' . $row->room_code;
         // }, true);
-        $crud->setActionButtonMultiple('Kích hoạt', 'fa fa-unlock', '/exam/active-rooms', false);
+        $crud->setActionButtonMultiple('Kích hoạt', 'fa fa-unlock', url('/exam/active-rooms'), false);
         $crud->setActionButton('Kích hoạt', 'fa fa-unlock', function ($row) use ($code) {
-            if($row->is_active) return '/exam/council-turn-rooms/' . $code;
-            else return '/exam/active-rooms?id[]=' . $row->id;
+            if($row->is_active) return url('/exam/council-turn-rooms/' . $code);
+            else return url('/exam/active-rooms?id[]=' . $row->id);
         }, false);
         $crud->setActionButton('Xem DS thí sinh', 'fa fa-users', function ($row) {
-            return '/exam/examinee?turn=' . $row->council_turn_code . '&room=' . $row->room_code;
+            return url('/exam/examinee?turn=' . $row->council_turn_code . '&room=' . $row->room_code);
         }, true);
         $crud->setActionButton('Xuất phiếu TK', 'fa fa-file-word-o', function ($row) {
-            return '/export/docx/examinee?turn=' . $row->council_turn_code . '&room=' . $row->room_code;
+            return url('/export/docx/examinee?turn=' . $row->council_turn_code . '&room=' . $row->room_code);
         }, true);
 
         $crud->callbackColumn('monitor_code', function ($value, $row) {
@@ -1207,7 +1214,7 @@ class CouncilController extends Controller
 
         $output = $crud->render();
 
-        $form_url = '/exam/import-examinee';
+        $form_url = url('/exam/import-examinee');
         
         return $this->_example_output($output, $title, $cat, $subcat, [
             'form_url' => $form_url,
@@ -1382,6 +1389,7 @@ class CouncilController extends Controller
         $council_turn_arr = [];
         $council_turn_room_arr = [];
         $room_arr = [];
+        $subject_arr = [];
         $monitor_arr = [];
         $user_arr = [];
         $examinee_arr = [];
@@ -1408,6 +1416,18 @@ class CouncilController extends Controller
                 'no_slots' => $room->no_slots,
                 'status' => $room->status,
                 'organization_code' => $room->organization_code,
+            ];
+        }
+        $subjects = Subject::where('status',1)->get();
+        foreach($subjects as $subject){
+            $subject_arr[] = [
+                'id' => $subject->id,
+                'code' => $subject->code,
+                'short_code' => $subject->short_code,
+                'code_number' => $subject->code_number,
+                'name' => $subject->name,
+                'desc' => $subject->desc,
+                'status' => $subject->status,
             ];
         }
         foreach($council_turns as $council_turn){
@@ -1512,6 +1532,7 @@ class CouncilController extends Controller
             'council_turns' => $council_turn_arr,
             'council_turn_rooms' => $council_turn_room_arr,
             'rooms' => $room_arr,
+            'subjects' => $subject_arr,
             'monitors' => $monitor_arr,
             'users' => $user_arr,
             'examinees' => $examinee_arr,
@@ -1554,6 +1575,15 @@ class CouncilController extends Controller
             $check = Room::where('code',$item['code'])->count();
             if(!$check){
                 Room::create($item);
+            }
+        }
+        //subjects
+        if(isset($council_data['subjects'])){
+            foreach($council_data['subjects'] as $item){
+                $check = Subject::where('code',$item['code'])->count();
+                if(!$check){
+                    Subject::create($item);
+                }
             }
         }
         //monitor-users
@@ -1818,7 +1848,7 @@ class CouncilController extends Controller
             // 'questions' => [],
             // 'test_groups' => [],
             'test_mix_ids' => (array_unique($test_mix_id_arr)),
-            'activity_logs' => ActivityLog::where('council_turn_code',$code)->get(),
+            // 'activity_logs' => ActivityLog::where('council_turn_code',$code)->get(),
             'packaged_time' => $packaged_time,
         );
 
@@ -1834,6 +1864,14 @@ class CouncilController extends Controller
         Storage::put('bkdata/' . $filename,$plain);
 
         return Storage::download('bkdata/' . $filename);
+    }
+
+    public function flushCouncilTurn(Request $request){
+        DB::table('activity_logs')->truncate();
+        DB::table('examinee_answers')->truncate();
+        DB::table('examinee_test_mixes')->truncate();
+
+        return redirect()->back()->with('message', 'Flush council turn data successfully.');
     }
 
     public function activeRooms(Request $request){
