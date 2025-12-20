@@ -20,35 +20,35 @@ class SubjectSeeder extends Seeder
             'name' => 'Toán',
             'desc' => 'Toán học'
         ]);
-        Subject::create([
-            'code' => 'LI',
-            'code_number' => 2,
-            'name' => 'Lí',
-            'desc' => 'Vật lí'
-        ]);
-        Subject::create([
-            'code' => 'HO',
-            'code_number' => 3,
-            'name' => 'Hoá',
-            'desc' => 'Hoá học'
-        ]);
-        Subject::create([
-            'code' => 'SI',
-            'code_number' => 4,
-            'name' => 'Sinh',
-            'desc' => 'Sinh học'
-        ]);
-        Subject::create([
-            'code' => 'VA',
-            'code_number' => 5,
-            'name' => 'Văn',
-            'desc' => 'Ngữ văn'
-        ]);
-        Subject::create([
-            'code' => 'N1',
-            'code_number' => 6,
-            'name' => 'Anh',
-            'desc' => 'Tiếng Anh'
-        ]);
+        // Subject::create([
+        //     'code' => 'LI',
+        //     'code_number' => 2,
+        //     'name' => 'Lí',
+        //     'desc' => 'Vật lí'
+        // ]);
+        // Subject::create([
+        //     'code' => 'HO',
+        //     'code_number' => 3,
+        //     'name' => 'Hoá',
+        //     'desc' => 'Hoá học'
+        // ]);
+        // Subject::create([
+        //     'code' => 'SI',
+        //     'code_number' => 4,
+        //     'name' => 'Sinh',
+        //     'desc' => 'Sinh học'
+        // ]);
+        // Subject::create([
+        //     'code' => 'VA',
+        //     'code_number' => 5,
+        //     'name' => 'Văn',
+        //     'desc' => 'Ngữ văn'
+        // ]);
+        // Subject::create([
+        //     'code' => 'N1',
+        //     'code_number' => 6,
+        //     'name' => 'Anh',
+        //     'desc' => 'Tiếng Anh'
+        // ]);
     }
 }

@@ -16,7 +16,7 @@ class CompetencySeeder extends Seeder
         //
         Competency::create([
             'code' => 'T1',
-            'name' => 'Năng lực nhận biết toán học',
+            'name' => 'Năng lực nhận biết',
             'desc' => '',
             'subject_id' => '1',
             'status' => '1',
