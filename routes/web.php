@@ -311,6 +311,7 @@ Route::prefix('exam')
     Route::get('/council-turn-test-mixes/{code?}', [CouncilController::class, 'councilTurnTestMixes']);
     Route::post('/council-turn-test-mixes/{code?}', [CouncilController::class, 'councilTurnTestMixes']);
     Route::get('/active-rooms', [CouncilController::class, 'activeRooms']);
+    Route::get('/deactive-rooms', [CouncilController::class, 'deactiveRooms']);
 
     // examinee
     Route::get('/examinee', [CouncilController::class, 'examinee']);

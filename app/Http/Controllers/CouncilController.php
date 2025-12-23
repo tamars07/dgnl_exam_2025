@@ -899,7 +899,7 @@ class CouncilController extends Controller
                 'room_code' => 'Phòng thi',
                 'council_turn_code' => 'Ca thi',
                 'monitor_code' => 'Cán bộ coi thi',
-                'is_active' => 'Bắt đầu thi'
+                'is_active' => 'Trạng thái'
             ])
             ->fieldType('is_active', 'dropdown_search',[
                 1 => 'Đã kích hoạt',
@@ -914,10 +914,16 @@ class CouncilController extends Controller
         // $crud->setActionButton('Đổi mật khẩu', 'fa fa-key', function ($row) {
         //     return '/view_avatar/' . $row->council_turn_code . '/' . $row->room_code;
         // }, true);
-        $crud->setActionButtonMultiple('Kích hoạt', 'fa fa-unlock', url('/exam/active-rooms'), false);
-        $crud->setActionButton('Kích hoạt', 'fa fa-unlock', function ($row) use ($code) {
+
+        $crud->setActionButtonMultiple('Kích hoạt', 'fa fa-unlock text-success', url('/exam/active-rooms'), false);
+
+        $crud->setActionButton('Kích hoạt', 'fa fa-unlock text-success', function ($row) use ($code) {
             if($row->is_active) return url('/exam/council-turn-rooms/' . $code);
             else return url('/exam/active-rooms?id[]=' . $row->id);
+        }, false);
+        $crud->setActionButton('Huỷ kích hoạt', 'fa fa-lock text-danger', function ($row) use ($code) {
+            if(!$row->is_active) return url('/exam/council-turn-rooms/' . $code);
+            else return url('/exam/deactive-rooms?id[]=' . $row->id);
         }, false);
         $crud->setActionButton('Xem DS thí sinh', 'fa fa-users', function ($row) {
             return url('/exam/examinee?turn=' . $row->council_turn_code . '&room=' . $row->room_code);
@@ -1879,6 +1885,18 @@ class CouncilController extends Controller
         // dd($ids);
         CouncilTurnRoom::whereIn('id',$ids)->update([
             'is_active' => true
+        ]);
+        return redirect()->back();
+        // foreach($ids as $id){
+        //     CouncilTurnRoom::whereIn($ids)
+        // }
+    }
+
+    public function deactiveRooms(Request $request){
+        $ids = $request->input('id');
+        // dd($ids);
+        CouncilTurnRoom::whereIn('id',$ids)->update([
+            'is_active' => false
         ]);
         return redirect()->back();
         // foreach($ids as $id){
