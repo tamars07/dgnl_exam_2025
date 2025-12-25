@@ -339,6 +339,7 @@ Route::prefix('exam')
     Route::post('/import-council', [CouncilController::class, 'importCouncil']);
     //export council turn
     Route::get('/export-council-turn/{code}', [CouncilController::class, 'exportCouncilTurn']);
+    Route::get('/flush-council-turn/{code}', [CouncilController::class, 'flushCouncilTurn']);
 });
 
 Route::get('users', [UserController::class, 'index']);
