@@ -52,14 +52,18 @@ Route::prefix('monitor')->group(function () {
     Route::get('/council-turn', [ExamController::class, 'getCouncilTurnByMonitor'])->middleware([JwtMiddleware::class]);
     Route::get('/council-turn-room', [ExamController::class, 'getRoomByMonitor'])->middleware([JwtMiddleware::class]);
     Route::get('/examinees', [ExamController::class, 'getExamineeListByMonitorRoom'])->middleware([JwtMiddleware::class]);
-    Route::get('/get-examinee-detail', [ExamController::class, '_getExamineeDetail'])->middleware([JwtMiddleware::class]); //cham thi
-    //Route::get('/get-examinee-detail', [ExamController::class, 'getExamineeDetail'])->middleware([JwtMiddleware::class]); //to chuc thi
+    // Route::get('/chamthi/get-examinee-detail', [ExamController::class, '_getExamineeDetail'])->middleware([JwtMiddleware::class]); //cham thi
+    Route::get('/get-examinee-detail', [ExamController::class, 'getExamineeDetail'])->middleware([JwtMiddleware::class]); //to chuc thi
     Route::post('/add-time', [ExamController::class, 'addBonusTime'])->middleware([JwtMiddleware::class]);
     Route::post('/restore-examinee', [ExamController::class, 'restoreExaminee'])->middleware([JwtMiddleware::class]);
     Route::get('/all-examinees', [ExamController::class, 'getAllExaminees'])->middleware([JwtMiddleware::class]);
     Route::post('/submit-test-by-monitor', [ExamController::class, 'submitTest'])->middleware([JwtMiddleware::class]);
 
-    
+    Route::post('/post-rubric-score', [ExamController::class, 'postRubricScore'])->middleware([JwtMiddleware::class]);
+});
+
+Route::prefix('chamthi')->group(function () {
+    Route::get('/get-examinee-detail', [ExamController::class, '_getExamineeDetail'])->middleware([JwtMiddleware::class]); //cham thi
     Route::post('/post-rubric-score', [ExamController::class, 'postRubricScore'])->middleware([JwtMiddleware::class]);
 });
 
