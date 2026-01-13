@@ -42,7 +42,7 @@ $js_files = isset($js_files)?$js_files:[];
                 <div class="window">
                     <div class="window-caption">
                         <span class="icon mif-windows"></span>
-                        <span class="title">Phân hệ tổ chức thi</span>
+                        <span class="title">Phân hệ tổ chức thi - HCMUE EXAM {{ date('Y') }}</span>
                         <span class="mr-3">v.2025.05.15</span>
                         {{-- <div class="buttons">
                             <a href="<?=url('/logout')?>"><span class="btn-close"></span></a>
