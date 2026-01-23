@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
             CompetencySeeder::class,
             TaxonomySeeder::class,
             TopicSeeder::class,
-            MonitorSeeder::class,
+            // MonitorSeeder::class,
             RoomHCMUESeeder::class,
             // RoomHUITSeeder::class,
             // RoomHUEduSeeder::class,
@@ -53,9 +53,9 @@ class DatabaseSeeder extends Seeder
             QuestionMarkSeeder::class,
             QuestionStoreSeeder::class,
             QuestionTypeSeeder::class,
-            TestFormSeeder::class,
-            TestPartSeeder::class,
-            TestFormPartSeeder::class,
+            // TestFormSeeder::class,
+            // TestPartSeeder::class,
+            // TestFormPartSeeder::class,
         ]);
     }
 }

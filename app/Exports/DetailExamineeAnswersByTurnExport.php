@@ -27,7 +27,9 @@ use App\Models\Question;
 use App\Models\QuestionMark;
 use App\Models\QuestionType;
 use App\Models\Rubric;
+use App\Models\Test;
 use App\Models\TestMix;
+use App\Models\TestForm;
 
 class DetailExamineeAnswersByTurnExport implements FromArray, WithHeadings, ShouldAutoSize, WithStyles
 {
@@ -59,6 +61,7 @@ class DetailExamineeAnswersByTurnExport implements FromArray, WithHeadings, Shou
             if(!str_contains($obj->examinee_test_code, $council_turn->code)) continue;
             $examinee_test_mix = ExamineeTestMix::where('examinee_test_code',$obj->examinee_test_code)->first();
             $test_mix = TestMix::find($examinee_test_mix->test_mix_id);
+            $test_form = TestForm::find($test_mix->test_form_id);
             $examinee = Examinee::where('code',$examinee_test_mix->examinee_code)->first();
             $subject = Subject::find($examinee_test_mix->subject_id);
             $room = Room::where('code',$examinee_test_mix->room_code)->first();
@@ -86,9 +89,9 @@ class DetailExamineeAnswersByTurnExport implements FromArray, WithHeadings, Shou
             }
             // dd(($_questions));
             $_questions = array_unique($_questions);
-            // ksort($_questions);
-            // if($obj->examinee_test_code == 'HO.DGNL_F25_UED_3.15') dd(($_questions));
-            $num_q = ($examinee_test_mix->subject_id == 5)?22:40;
+
+            // $num_q = ($examinee_test_mix->subject_id == 5)?22:40;
+            $num_q = ($test_form)?$test_form->no_questions:0;
             for($i=1; $i<=$num_q;$i++){
                 $_data = [
                     'num' => $i,

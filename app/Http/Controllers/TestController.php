@@ -1429,6 +1429,12 @@ class TestController extends Controller
                 Subject::create($subject);
             }
         }
+        $question_mark_array = $body['question_marks'];
+        foreach($question_mark_array as $question_mark){
+            if(!(QuestionMark::where('id',$question_mark['id'])->count())){
+                QuestionMark::create($question_mark);
+            }
+        }
         $test_mixes_array = $body['test_mixes'];
         foreach($test_mixes_array as $test_mix){
             $test_mix['council_code'] = $council_turn->council_code;
@@ -1448,7 +1454,7 @@ class TestController extends Controller
         }
         $question_array = $body['questions'];
         foreach($question_array as $question){
-            $question['question_mark_id'] = 1;
+            // $question['question_mark_id'] = 1;
             $question['competency_id'] = 1;
             $question['taxonomy_id'] = 1;
             $question['topic_id'] = 1;

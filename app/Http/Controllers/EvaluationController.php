@@ -487,20 +487,29 @@ class EvaluationController extends Controller
         $crud->callbackColumn('no_rooms', function ($value, $row) {
             //so bai thi
             $count_examinee_test_mixes = ExamineeTestMix::where('council_turn_code',$row->code)->count();
-            $count_examinee_test_mixes_to = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',1)->count();
-            $count_examinee_test_mixes_li = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',2)->count();
-            $count_examinee_test_mixes_ho = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',3)->count();
-            $count_examinee_test_mixes_si = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',4)->count();
-            $count_examinee_test_mixes_va = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',5)->count();
+            // $count_examinee_test_mixes_to = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',1)->count();
+            // $count_examinee_test_mixes_li = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',2)->count();
+            // $count_examinee_test_mixes_ho = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',3)->count();
+            // $count_examinee_test_mixes_si = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',4)->count();
+            // $count_examinee_test_mixes_va = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',5)->count();
+
             //so bai thi da gan
-            $count_assigned_test = ExaminerPair::where('council_turn_code',$row->code)->sum('no_tests');
+            // $count_assigned_test = ExaminerPair::where('council_turn_code',$row->code)->sum('no_tests');
             $html = "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
-            if($count_examinee_test_mixes_to) $html .= "<div class=\"gc-data-container-text\">Toán: " . $count_examinee_test_mixes_to . "</div><br>";
-            if($count_examinee_test_mixes_li) $html .= "<div class=\"gc-data-container-text\">Lí: " . $count_examinee_test_mixes_li . "</div><br>";
-            if($count_examinee_test_mixes_ho) $html .= "<div class=\"gc-data-container-text\">Hoá: " . $count_examinee_test_mixes_ho . "</div><br>";
-            if($count_examinee_test_mixes_si) $html .= "<div class=\"gc-data-container-text\">Sinh: " . $count_examinee_test_mixes_si . "</div><br>";
-            if($count_examinee_test_mixes_va) {
-                $html .= "<div class=\"gc-data-container-text\">Văn: " . $count_examinee_test_mixes_va . " (Đã gán: " . $count_assigned_test . ", Còn lại: " . ($count_examinee_test_mixes_va - $count_assigned_test) . ")</div><br>";
+            // if($count_examinee_test_mixes_to) $html .= "<div class=\"gc-data-container-text\">Toán: " . $count_examinee_test_mixes_to . "</div><br>";
+            // if($count_examinee_test_mixes_li) $html .= "<div class=\"gc-data-container-text\">Lí: " . $count_examinee_test_mixes_li . "</div><br>";
+            // if($count_examinee_test_mixes_ho) $html .= "<div class=\"gc-data-container-text\">Hoá: " . $count_examinee_test_mixes_ho . "</div><br>";
+            // if($count_examinee_test_mixes_si) $html .= "<div class=\"gc-data-container-text\">Sinh: " . $count_examinee_test_mixes_si . "</div><br>";
+            // if($count_examinee_test_mixes_va) {
+            //     $html .= "<div class=\"gc-data-container-text\">Văn: " . $count_examinee_test_mixes_va . " (Đã gán: " . $count_assigned_test . ", Còn lại: " . ($count_examinee_test_mixes_va - $count_assigned_test) . ")</div><br>";
+            // }
+            //thống kê số bài theo môn
+            $subjects = Subject::where('status',1)->get();
+            foreach($subjects as $subject){
+                $count_examinee_test_mixes_sub = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',$subject->id)->count();
+                if($count_examinee_test_mixes_sub){
+                    $html .= "<div class=\"gc-data-container-text\">" . $subject->desc . ": " . $count_examinee_test_mixes_sub . "</div><br>";
+                }
             }
             return $html;
         });
@@ -895,13 +904,19 @@ class EvaluationController extends Controller
                 Subject::create($subject);
             }
         }
+        $question_mark_array = $body['question_marks'];
+        foreach($question_mark_array as $question_mark){
+            if(!(QuestionMark::where('id',$question_mark['id'])->count())){
+                QuestionMark::create($question_mark);
+            }
+        }
         $test_mixes_array = $body['test_mixes'];
         foreach($test_mixes_array as $test_mix){
             if(!(TestMix::where('id',$test_mix['id'])->count())){
                 TestMix::create($test_mix);
             }else{
-		TestMix::where('id',$test_mix['id'])->update(['test_root_id'=>$test_mix['test_root_id']]);
-	}
+                TestMix::where('id',$test_mix['id'])->update(['test_root_id'=>$test_mix['test_root_id']]);
+            }
         }
         $question_array = $body['questions'];
         foreach($question_array as $question){

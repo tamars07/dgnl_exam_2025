@@ -9,4 +9,12 @@ class QuestionMark extends Model
 {
     //
     use SoftDeletes;
+
+    protected $fillable = [
+        'id',
+        'name',
+        'desc',
+        'value',
+        'status',
+    ];
 }
