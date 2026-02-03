@@ -2129,20 +2129,32 @@ class EvaluationController extends Controller
         $crud->callbackColumn('no_rooms', function ($value, $row) {
             $html = '';
             //so bai thi
-            $count_examinee_test_mixes = AnswerKey::where('council_turn_code',$row->code)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_to = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',1)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_li = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',2)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_ho = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',3)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_si = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',4)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_va = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',5)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes = AnswerKey::where('council_turn_code',$row->code)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_to = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',1)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_li = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',2)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_ho = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',3)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_si = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',4)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_va = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',5)->distinct('examinee_test_code')->count('examinee_test_code');
             
-            // $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $_count_examinee_test_mixes . "</div><br>";
-            $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
-            if($count_examinee_test_mixes_to) $html .= "<div class=\"gc-data-container-text\">Toán: " . $count_examinee_test_mixes_to . "</div><br>";
-            if($count_examinee_test_mixes_li) $html .= "<div class=\"gc-data-container-text\">Lí: " . $count_examinee_test_mixes_li . "</div><br>";
-            if($count_examinee_test_mixes_ho) $html .= "<div class=\"gc-data-container-text\">Hoá: " . $count_examinee_test_mixes_ho . "</div><br>";
-            if($count_examinee_test_mixes_si) $html .= "<div class=\"gc-data-container-text\">Sinh: " . $count_examinee_test_mixes_si . "</div><br>";
-            if($count_examinee_test_mixes_va) $html .= "<div class=\"gc-data-container-text\">Văn: " . $count_examinee_test_mixes_va . "</div><br>";
+            // // $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $_count_examinee_test_mixes . "</div><br>";
+            // $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
+            // if($count_examinee_test_mixes_to) $html .= "<div class=\"gc-data-container-text\">Toán: " . $count_examinee_test_mixes_to . "</div><br>";
+            // if($count_examinee_test_mixes_li) $html .= "<div class=\"gc-data-container-text\">Lí: " . $count_examinee_test_mixes_li . "</div><br>";
+            // if($count_examinee_test_mixes_ho) $html .= "<div class=\"gc-data-container-text\">Hoá: " . $count_examinee_test_mixes_ho . "</div><br>";
+            // if($count_examinee_test_mixes_si) $html .= "<div class=\"gc-data-container-text\">Sinh: " . $count_examinee_test_mixes_si . "</div><br>";
+            // if($count_examinee_test_mixes_va) $html .= "<div class=\"gc-data-container-text\">Văn: " . $count_examinee_test_mixes_va . "</div><br>";
+
+            $count_examinee_test_mixes = ExamineeTestMix::where('council_turn_code',$row->code)->count();
+            $html = "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
+            //thống kê số bài theo môn
+            $subjects = Subject::where('status',1)->get();
+            foreach($subjects as $subject){
+                $count_examinee_test_mixes_sub = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',$subject->id)->count();
+                if($count_examinee_test_mixes_sub){
+                    $html .= "<div class=\"gc-data-container-text\">" . $subject->desc . ": " . $count_examinee_test_mixes_sub . "</div><br>";
+                }
+            }
+
             return $html;
         });
         $crud->callbackColumn('status', function ($value, $row) {
@@ -2231,29 +2243,36 @@ class EvaluationController extends Controller
 			->unsetPrint()->unsetExport();
         
         $crud->callbackColumn('no_turns', function ($value, $row) {
+            $html = '';
+
             //so ca thi
             $html = "<div class=\"gc-data-container-text\">Số ca thi: " . $value . "</div><br>";
-            //so bai thi
-            // $_count_examinee_test_mixes = ExamineeTestMix::where('council_code',$row->code)->count();
-            // $_count_examinee_test_mixes_to = ExamineeTestMix::where('council_code',$row->code)->where('subject_id',1)->count();
-            // $_count_examinee_test_mixes_li = ExamineeTestMix::where('council_code',$row->code)->where('subject_id',2)->count();
-            // $_count_examinee_test_mixes_ho = ExamineeTestMix::where('council_code',$row->code)->where('subject_id',3)->count();
-            // $_count_examinee_test_mixes_si = ExamineeTestMix::where('council_code',$row->code)->where('subject_id',4)->count();
-            // $_count_examinee_test_mixes_va = ExamineeTestMix::where('council_code',$row->code)->where('subject_id',5)->count();
-            $count_examinee_test_mixes = AnswerKey::where('council_code',$row->code)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_to = AnswerKey::where('council_code',$row->code)->where('subject_id',1)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_li = AnswerKey::where('council_code',$row->code)->where('subject_id',2)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_ho = AnswerKey::where('council_code',$row->code)->where('subject_id',3)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_si = AnswerKey::where('council_code',$row->code)->where('subject_id',4)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_va = AnswerKey::where('council_code',$row->code)->where('subject_id',5)->distinct('examinee_test_code')->count('examinee_test_code');
+            // //so bai thi
+            // $count_examinee_test_mixes = AnswerKey::where('council_code',$row->code)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_to = AnswerKey::where('council_code',$row->code)->where('subject_id',1)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_li = AnswerKey::where('council_code',$row->code)->where('subject_id',2)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_ho = AnswerKey::where('council_code',$row->code)->where('subject_id',3)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_si = AnswerKey::where('council_code',$row->code)->where('subject_id',4)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_va = AnswerKey::where('council_code',$row->code)->where('subject_id',5)->distinct('examinee_test_code')->count('examinee_test_code');
             
-            // $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $_count_examinee_test_mixes . "</div><br>";
+            // // $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $_count_examinee_test_mixes . "</div><br>";
+            // $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
+            // if($count_examinee_test_mixes_to) $html .= "<div class=\"gc-data-container-text\">Toán: " . $count_examinee_test_mixes_to . "</div><br>";
+            // if($count_examinee_test_mixes_li) $html .= "<div class=\"gc-data-container-text\">Lí: " . $count_examinee_test_mixes_li . "</div><br>";
+            // if($count_examinee_test_mixes_ho) $html .= "<div class=\"gc-data-container-text\">Hoá: " . $count_examinee_test_mixes_ho . "</div><br>";
+            // if($count_examinee_test_mixes_si) $html .= "<div class=\"gc-data-container-text\">Sinh: " . $count_examinee_test_mixes_si . "</div><br>";
+            // if($count_examinee_test_mixes_va) $html .= "<div class=\"gc-data-container-text\">Văn: " . $count_examinee_test_mixes_va . "</div><br>";
+
+            $count_examinee_test_mixes = ExamineeTestMix::where('council_code',$row->code)->count();
             $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
-            if($count_examinee_test_mixes_to) $html .= "<div class=\"gc-data-container-text\">Toán: " . $count_examinee_test_mixes_to . "</div><br>";
-            if($count_examinee_test_mixes_li) $html .= "<div class=\"gc-data-container-text\">Lí: " . $count_examinee_test_mixes_li . "</div><br>";
-            if($count_examinee_test_mixes_ho) $html .= "<div class=\"gc-data-container-text\">Hoá: " . $count_examinee_test_mixes_ho . "</div><br>";
-            if($count_examinee_test_mixes_si) $html .= "<div class=\"gc-data-container-text\">Sinh: " . $count_examinee_test_mixes_si . "</div><br>";
-            if($count_examinee_test_mixes_va) $html .= "<div class=\"gc-data-container-text\">Văn: " . $count_examinee_test_mixes_va . "</div><br>";
+            //thống kê số bài theo môn
+            $subjects = Subject::where('status',1)->get();
+            foreach($subjects as $subject){
+                $count_examinee_test_mixes_sub = ExamineeTestMix::where('council_code',$row->code)->where('subject_id',$subject->id)->count();
+                if($count_examinee_test_mixes_sub){
+                    $html .= "<div class=\"gc-data-container-text\">" . $subject->desc . ": " . $count_examinee_test_mixes_sub . "</div><br>";
+                }
+            }
             
             return $html;
         });
@@ -2314,21 +2333,33 @@ class EvaluationController extends Controller
         
         $crud->callbackColumn('no_rooms', function ($value, $row) {
             $html = '';
+
             //so bai thi
-            $count_examinee_test_mixes = AnswerKey::where('council_turn_code',$row->code)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_to = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',1)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_li = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',2)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_ho = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',3)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_si = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',4)->distinct('examinee_test_code')->count('examinee_test_code');
-            $count_examinee_test_mixes_va = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',5)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes = AnswerKey::where('council_turn_code',$row->code)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_to = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',1)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_li = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',2)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_ho = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',3)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_si = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',4)->distinct('examinee_test_code')->count('examinee_test_code');
+            // $count_examinee_test_mixes_va = AnswerKey::where('council_turn_code',$row->code)->where('subject_id',5)->distinct('examinee_test_code')->count('examinee_test_code');
             
-            // $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $_count_examinee_test_mixes . "</div><br>";
-            $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
-            if($count_examinee_test_mixes_to) $html .= "<div class=\"gc-data-container-text\">Toán: " . $count_examinee_test_mixes_to . "</div><br>";
-            if($count_examinee_test_mixes_li) $html .= "<div class=\"gc-data-container-text\">Lí: " . $count_examinee_test_mixes_li . "</div><br>";
-            if($count_examinee_test_mixes_ho) $html .= "<div class=\"gc-data-container-text\">Hoá: " . $count_examinee_test_mixes_ho . "</div><br>";
-            if($count_examinee_test_mixes_si) $html .= "<div class=\"gc-data-container-text\">Sinh: " . $count_examinee_test_mixes_si . "</div><br>";
-            if($count_examinee_test_mixes_va) $html .= "<div class=\"gc-data-container-text\">Văn: " . $count_examinee_test_mixes_va . "</div><br>";
+            // $html .= "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
+            // if($count_examinee_test_mixes_to) $html .= "<div class=\"gc-data-container-text\">Toán: " . $count_examinee_test_mixes_to . "</div><br>";
+            // if($count_examinee_test_mixes_li) $html .= "<div class=\"gc-data-container-text\">Lí: " . $count_examinee_test_mixes_li . "</div><br>";
+            // if($count_examinee_test_mixes_ho) $html .= "<div class=\"gc-data-container-text\">Hoá: " . $count_examinee_test_mixes_ho . "</div><br>";
+            // if($count_examinee_test_mixes_si) $html .= "<div class=\"gc-data-container-text\">Sinh: " . $count_examinee_test_mixes_si . "</div><br>";
+            // if($count_examinee_test_mixes_va) $html .= "<div class=\"gc-data-container-text\">Văn: " . $count_examinee_test_mixes_va . "</div><br>";
+
+            $count_examinee_test_mixes = ExamineeTestMix::where('council_turn_code',$row->code)->count();
+            $html = "<div class=\"gc-data-container-text\">Số lượng bài thi: " . $count_examinee_test_mixes . "</div><br>";
+            //thống kê số bài theo môn
+            $subjects = Subject::where('status',1)->get();
+            foreach($subjects as $subject){
+                $count_examinee_test_mixes_sub = ExamineeTestMix::where('council_turn_code',$row->code)->where('subject_id',$subject->id)->count();
+                if($count_examinee_test_mixes_sub){
+                    $html .= "<div class=\"gc-data-container-text\">" . $subject->desc . ": " . $count_examinee_test_mixes_sub . "</div><br>";
+                }
+            }
+
             return $html;
         });
         $crud->callbackColumn('status', function ($value, $row) {
@@ -2431,11 +2462,11 @@ class EvaluationController extends Controller
                     }
                     break;
                 case 4: //TLN
-			// Bước 1: Xóa khoảng trắng đầu và cuối
-			$trimmed = trim($item->examinee_answer);
-			// Bước 2: Thay thế nhiều khoảng trắng liên tiếp bằng 1 khoảng trắng
-			$cleaned = preg_replace('/\s+/', ' ', $trimmed);
-			$item->examinee_answer = $cleaned;
+                    // Bước 1: Xóa khoảng trắng đầu và cuối
+                    $trimmed = trim($item->examinee_answer);
+                    // Bước 2: Thay thế nhiều khoảng trắng liên tiếp bằng 1 khoảng trắng
+                    $cleaned = preg_replace('/\s+/', ' ', $trimmed);
+                    $item->examinee_answer = $cleaned;
                     switch($item->answer_type){
                         case 'INTEGER_NUMBER': 
                             if(strval($item->examinee_answer) == strval($item->answer_key)){
@@ -2492,7 +2523,6 @@ class EvaluationController extends Controller
                     break;
                 case 5: //LNN
                     // tổng hợp điểm từ rubrics
-                    //dd($item->score);
                     if(true || !$item->score){
                         $rubric_criteria = RubricCriteria::where('rubric_id',$item->rubric_id)->get();
                         $pair = ExaminerAssignment::where('examinee_test_code',$item->examinee_test_code)->first();
@@ -2501,16 +2531,17 @@ class EvaluationController extends Controller
                         $examiner2_pair = ExaminerPairDetail::where('examiner_pair_id',$pair->examiner_pair_id)->where('examiner_role',2)->first();
                         $examiner2 = Monitor::find($examiner2_pair->examiner_id);
                         $_score1 = 0;
-			$_score11 = 0;
-			$_score21 = 0;
+                        $_score11 = 0;
+                        $_score21 = 0;
                         foreach($rubric_criteria as $rubric){
                             $_detail = ExaminerRubricDetail::where('rubric_criteria_id',$rubric->id)->where('examiner_id',$examiner1->id)->where('examinee_test_code',$item->examinee_test_code)->orderBy('id','desc')->first();
                             $_score11 += floatval($_detail?$_detail->score:0);
                             $_detail = ExaminerRubricDetail::where('rubric_criteria_id',$rubric->id)->where('examiner_id',$examiner2->id)->where('examinee_test_code',$item->examinee_test_code)->orderBy('id','desc')->first();
                             $_score21 += floatval($_detail?$_detail->score:0);
                         }
-//dd($_score11);
-			$_score1 = floatval($_score11 + $_score21) / 2;
+                        if(!$_score11) $_score11 = $_score21;
+                        if(!$_score21) $_score21 = $_score11;
+			            $_score1 = floatval($_score11 + $_score21) / 2;
 
                         $_score2 = 0;
                         $_score12 = 0;
@@ -2521,8 +2552,10 @@ class EvaluationController extends Controller
                             $_detail = ExaminerRubricDetail::where('rubric_criteria_id',$rubric->id)->where('examiner_id',$examiner2->id)->where('examinee_test_code',$item->examinee_test_code)->orderBy('id','desc')->first();
                             $_score22 += floatval($_detail?$_detail->score:0);
                         }
+                        if(!$_score12) $_score12 = $_score22;
+                        if(!$_score22) $_score22 = $_score12;
                         $_score2 = floatval($_score12 + $_score22) / 2;
-//dd($_score2);
+
                         $is_correct = true;
                         $score = floatval($_score1 + $_score2) / 2;
                     }else{
