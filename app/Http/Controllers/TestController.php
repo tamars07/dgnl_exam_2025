@@ -1406,7 +1406,6 @@ class TestController extends Controller
         $test_group = $header['test_group'];
         if(!(TestGroup::where('id',$test_group['id'])->count())){
             $test_group['encryption_file'] = $filename;
-            // dd($test_group);
             TestGroup::create($test_group);
         }
 
@@ -1415,24 +1414,58 @@ class TestController extends Controller
         foreach($test_form_array as $test_form){
             if(!(TestForm::where('id',$test_form['id'])->count())){
                 TestForm::create($test_form);
+            }else{
+                $t_form = TestForm::find($test_form['id']);
+                $t_form->code = $test_form['code'];
+                $t_form->name = $test_form['name'];
+                $t_form->time = $test_form['time'];
+                $t_form->no_questions = $test_form['no_questions'];
+                $t_form->no_parts = $test_form['no_parts'];
+                $t_form->status = $test_form['status'];
+                $t_form->save();
             }
         }
         $test_part_array = $body['test_part'];
         foreach($test_part_array as $test_part){
             if(!(TestPart::where('id',$test_part['id'])->count())){
                 TestPart::create($test_part);
+            }else{
+                $t_part = TestPart::find($test_part['id']);
+                $t_part->name = $test_part['name'];
+                $t_part->part_title = $test_part['part_title'];
+                $t_part->desc = $test_part['desc'];
+                $t_part->caltype = $test_part['caltype'];
+                $t_part->is_shuffled = $test_part['is_shuffled'];
+                $t_part->status = $test_part['status'];
+                $t_part->save();
             }
         }
         $subject_array = $body['subject'];
         foreach($subject_array as $subject){
             if(!(Subject::where('id',$subject['id'])->count())){
                 Subject::create($subject);
+            }else{
+                $q_subject = Subject::find($subject['id']);
+                $q_subject->code = $subject['code'];
+                $q_subject->short_code = $subject['short_code'];
+                $q_subject->code_number = $subject['code_number'];
+                $q_subject->name = $subject['name'];
+                $q_subject->desc = $subject['desc'];
+                $q_subject->status = $subject['status'];
+                $q_subject->save();
             }
         }
         $question_mark_array = $body['question_marks'];
         foreach($question_mark_array as $question_mark){
             if(!(QuestionMark::where('id',$question_mark['id'])->count())){
                 QuestionMark::create($question_mark);
+            }else{
+                $q_mark = QuestionMark::find($question_mark['id']);
+                $q_mark->name = $question_mark['name'];
+                $q_mark->desc = $question_mark['desc'];
+                $q_mark->value = $question_mark['value'];
+                $q_mark->status = $question_mark['status'];
+                $q_mark->save();
             }
         }
         $test_mixes_array = $body['test_mixes'];
