@@ -126,6 +126,7 @@ class DetailExamineeAnswersByTurnExport implements FromArray, WithHeadings, Shou
                     $_question = Question::find($item->question_id);
                     $_question_mark = QuestionMark::find($item->question_mark_id);
                     $_question_type = QuestionType::find($item->question_type_id);
+                    if(!$_question) continue;
                     $_data[] = strval($_question->code);
                     $_data[] = strval($item->matrix_location);
                     $_data[] = strval($_question_type->code);

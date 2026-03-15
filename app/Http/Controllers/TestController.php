@@ -1410,6 +1410,14 @@ class TestController extends Controller
             TestGroup::create($test_group);
         }
 
+        //truncate table before import
+        // DB::table('test_form')->truncate();
+        // DB::table('test_part')->truncate();
+        // DB::table('subject')->truncate();
+        // DB::table('question_marks')->truncate();
+        // DB::table('test_mixes')->truncate();
+        // DB::table('questions')->truncate();
+
         $body = $test_mixes_content['body'];
         $test_form_array = $body['test_form'];
         foreach($test_form_array as $test_form){

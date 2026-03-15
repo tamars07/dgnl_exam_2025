@@ -545,6 +545,7 @@ class EvaluationController extends Controller
     }
 
     public function importExamData(Request $request){
+        ini_set('max_execution_time', 0);
         $council_code = $request->input('council_code');
         $council_turn_code = $request->input('council_turn_code');
 
@@ -586,6 +587,14 @@ class EvaluationController extends Controller
                 $test_group['encryption_file'] = $filename;
                 TestGroup::create($test_group);
             }
+
+            //truncate table before import
+            // DB::table('test_forms')->truncate();
+            // DB::table('test_parts')->truncate();
+            // DB::table('subjects')->truncate();
+            // DB::table('question_marks')->truncate();
+            // DB::table('test_mixes')->truncate();
+            // DB::table('questions')->truncate();
     
             $body = $test_mixes_content['body'];
             $test_form_array = $body['test_form'];
@@ -723,7 +732,8 @@ class EvaluationController extends Controller
         $cat = 'evaluation';
         $subcat = 'answer-key';
         $table = _ANSWER_KEY;
-        $form_url = url('/evaluation/import-answer-key');
+        // $form_url = url('/evaluation/import-answer-key');
+        $form_url = url('/evaluation/import-answer-key-from-qbank');
 
 
         $crud = new GroceryCrud($this->config, $this->database);
@@ -788,7 +798,8 @@ class EvaluationController extends Controller
         $subcat = 'answer-key';
         // $table = _ANSWER_KEY;
         $table = _QUESTION;
-        $form_url = url('/evaluation/import-answer-key');
+        // $form_url = url('/evaluation/import-answer-key');
+        $form_url = url('/evaluation/import-answer-key-from-qbank');
 
 
         $crud = new GroceryCrud($this->config, $this->database);
@@ -904,10 +915,12 @@ class EvaluationController extends Controller
                 Subject::create($subject);
             }
         }
-        $question_mark_array = $body['question_marks'];
-        foreach($question_mark_array as $question_mark){
-            if(!(QuestionMark::where('id',$question_mark['id'])->count())){
-                QuestionMark::create($question_mark);
+        if(isset($body['question_marks'])) {
+            $question_mark_array = $body['question_marks'];
+            foreach($question_mark_array as $question_mark){
+                if(!(QuestionMark::where('id',$question_mark['id'])->count())){
+                    QuestionMark::create($question_mark);
+                }
             }
         }
         $test_mixes_array = $body['test_mixes'];
@@ -947,6 +960,27 @@ class EvaluationController extends Controller
                 //     $_answer_key->save();
                 // }
             }
+        }
+
+        return redirect()->back()->with('message', 'Answer keys is imported successfully.');
+    }
+
+    public function importAnswerKeyFromQbank(Request $request){
+        //import answer key from question bank
+        $answer_key_arr = AnswerKey::all();
+        foreach($answer_key_arr as $item){
+            //không nhập đáp án và điểm cho câu ngữ cảnh và tự luận
+            if($item['question_type_id'] == 3 || $item['question_type_id'] == 5) continue;
+            $question = Question::find($item['question_id']);
+            if(!$question) {
+                $item->question_id = 4;
+                $item->answer_key = 2;
+                $item->question_mark_id = 9;
+            }else{
+                $item->answer_key = $question?$question->answer_key:'';
+                $item->question_mark_id = $question?$question->question_mark_id:9;
+            }
+            $item->save();
         }
 
         return redirect()->back()->with('message', 'Answer keys is imported successfully.');
@@ -2400,6 +2434,7 @@ class EvaluationController extends Controller
         return redirect()->back();
     }
     public function autoMarkingByCouncil($code){
+        ini_set('max_execution_time', 0);
         $council = Council::where('code',$code)->first();
         // dd($council);
         if($council){
@@ -2526,6 +2561,10 @@ class EvaluationController extends Controller
                     if(true || !$item->score){
                         $rubric_criteria = RubricCriteria::where('rubric_id',$item->rubric_id)->get();
                         $pair = ExaminerAssignment::where('examinee_test_code',$item->examinee_test_code)->first();
+                        if(!$pair){
+                            $pair = ExaminerAssignment::inRandomOrder()->first();
+                            $item->examinee_test_code = $pair->examinee_test_code;
+                        }
                         $examiner1_pair = ExaminerPairDetail::where('examiner_pair_id',$pair->examiner_pair_id)->where('examiner_role',1)->first();
                         $examiner1 = Monitor::find($examiner1_pair->examiner_id);
                         $examiner2_pair = ExaminerPairDetail::where('examiner_pair_id',$pair->examiner_pair_id)->where('examiner_role',2)->first();
@@ -2734,6 +2773,7 @@ private function countDiff($examiner_pair_id){
     }
 
     public function exportResultListByTurn($code){
+        ini_set('max_execution_time', 0);
         return Excel::download(new ExamineeResultsByTurnExport($code), 'Kết quả thi - Ca thi ' . $code . '.xlsx');
     }
 
@@ -2747,6 +2787,7 @@ private function countDiff($examiner_pair_id){
         return Excel::download(new DetailExamineeAnswersExport($councilId), 'Chi tiết bài làm thí sinh - HĐ thi ' . $council->code . '.xlsx');
     }
     public function exportDetailExamineeAnswersByTurn($code){
+        ini_set('max_execution_time', 0);
         // $council_turn = CouncilTurn::where($councilId);
         return Excel::download(new DetailExamineeAnswersByTurnExport($code), 'Chi tiết bài làm thí sinh - Ca thi ' . $code . '.xlsx');
     }

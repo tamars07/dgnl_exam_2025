@@ -403,6 +403,7 @@ Route::prefix('evaluation')
 
     //import answer-key
     Route::post('/import-answer-key', [EvaluationController::class, 'importAnswerKey']);
+    Route::post('/import-answer-key-from-qbank', [EvaluationController::class, 'importAnswerKeyFromQBank']);
 
     // summary-sync-data
     Route::get('/summary-sync-data', [EvaluationController::class, 'summarySyncData']);
