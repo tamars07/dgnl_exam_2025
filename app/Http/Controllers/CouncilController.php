@@ -61,6 +61,7 @@ define('_COUNCIL','councils');
 define('_TURN','council_turns');
 define('_TURN_ROOM','council_turn_rooms');
 define('_EXAMINEE','examinees');
+define('_ACTIVITY_LOG','activity_logs');
 define('_TURN_TEST','test_mixes');
 define('_TURN_TEST_MIX','council_turn_test_mixes');
 
@@ -621,7 +622,7 @@ class CouncilController extends Controller
         // }, true);
         $crud->setActionButton('Dọn dẹp', 'fa fa-trash', function ($row) {
             $url = url('exam/flush-council-turn/' . $row->code);
-            return "javascript:if(confirm('Bạn có chắc chắn muốn dọn dẹp kỳ {$row->code}?')){ window.location.href='$url'; }";
+            return "javascript:if(confirm('Bạn có chắc chắn muốn backup db và dọn dẹp kỳ {$row->code}?')){ window.location.href='$url'; }";
         }, false);
         $crud->callbackColumn('no_rooms', function ($value, $row) use($council) {
             $html = "<div class=\"gc-data-container-text\">Số lượng phòng thi: " . $value . "</div><br>";
@@ -1112,8 +1113,13 @@ class CouncilController extends Controller
             return $stateParameters;
         });
 
-        $crud->setActionButton('Phục hồi', 'fa fa-retweet', function ($row) {
-            return '/examinee/reset/' . $row->id;
+        // $crud->setActionButton('Phục hồi', 'fa fa-retweet', function ($row) {
+        //     return '/examinee/reset/' . $row->id;
+        // }, true);
+
+        $crud->setActionButton('Xem Log', 'fa fa-history', function ($row) {
+            $_user = User::find($row->user_id);
+            return '/exam/examinee-logs/' . $_user->email;
         }, true);
 
         $crud->setCsrfTokenName('_token');
@@ -1132,6 +1138,78 @@ class CouncilController extends Controller
             'room_code' => $room_code,
             'data' => ''
         ]);
+    }
+
+    /**
+     * examinee log management
+     */
+    public function examineeLogs($username = '')
+    {
+        $title = 'Lịch sử thao tác thí sinh';
+        $cat = 'management';
+        $subcat = 'examinee';
+        $table = _ACTIVITY_LOG;
+
+        $where_clause = 'activity_logs.role_id = 8';
+        $where_clause .= " AND activity_logs.username LIKE '" . $username . "'";
+        // if($username != '') {
+        //     $username = $request->query('u');
+        //     $where_clause .= " AND activity_logs.username LIKE '" . $username . "'";
+        // }
+        
+        $crud = new GroceryCrud($this->config, $this->database);
+        $crud->setTable($table)
+            ->where($where_clause)
+            ->setSubject($title, 'Quản lý ' . $title)
+            ->columns([
+                'username', 
+                'room_code', 
+                'action', 
+                'desc', 
+                'log_time'
+                ])
+            ->setRead()
+            ->fieldType('desc', 'text')
+            ->editFields([
+                'username', 
+                'room_code', 
+                'action', 
+                'desc', 
+                'log_time'
+                ])
+            ->displayAs([
+                'username' => 'Tài khoản', 
+                'room_code' => 'Phòng thi', 
+                'action' => 'Hành động', 
+                'desc' => 'Mô tả', 
+                'log_time' => 'Thời gian'
+            ])
+            ->defaultOrdering('log_time', 'desc')
+			->unsetReadFields(['deleted_at'])
+			->unsetAdd()
+			->unsetEdit()
+			// ->unsetEditFields(['created_at', 'updated_at', 'deleted_at'])
+            ->unsetDelete()
+			->unsetPrint()->unsetExport();
+
+        $crud->callbackColumn('log_time', function ($value, $row) {
+            return date('Y/m/d H:i:s', $value);
+        });
+
+        $crud->setActionButton('Khôi phục', 'fa fa-retweet', function ($row) {
+            $_user = User::find($row->user_id);
+            $url = url('exam/restore-logs/' . $_user->username);
+            return "javascript:if(confirm('Bạn có chắc chắn muốn khôi phục dữ liệu bài thi cho tài khoản{$_user->username}?')){ window.location.href='$url'; }";
+            // return '/exam/restore-logs/' . $row->id;
+            return '';
+        }, false);
+
+        $crud->setCsrfTokenName('_token');
+        $crud->setCsrfTokenValue(csrf_token());
+
+        $output = $crud->render();
+        
+        return $this->_example_output($output, $title, $cat, $subcat);
     }
 
     public function examineeImport(Request $request)
@@ -1872,12 +1950,37 @@ class CouncilController extends Controller
         return Storage::download('bkdata/' . $filename);
     }
 
-    public function flushCouncilTurn(Request $request){
+    public function flushCouncilTurn(Request $request, $code){
+        // DB::table('activity_logs')->truncate();
+        // DB::table('examinee_answers')->truncate();
+        // DB::table('examinee_test_mixes')->truncate();
+
+        // return redirect()->back()->with('message', 'Flush council turn data successfully.');
+        $database = config('database.connections.mysql.database');
+        $username = config('database.connections.mysql.username');
+        $password = config('database.connections.mysql.password');
+        $host     = config('database.connections.mysql.host');
+// dd($database, $username, $password, $host);
+        $filename = 'backup_' . $code . '_' . date('Ymd_His') . '.sql';
+        // $path = storage_path('app/' . $filename);
+        $path = storage_path('app/' . $filename . '.zip');
+
+        // 1️⃣ Backup database
+        // $command = "mysqldump -h {$host} -u {$username} -p{$password} {$database} > {$path}";
+        $command = "mysqldump -h {$host} -u {$username} -p{$password} {$database} | gzip > {$path}";
+        exec($command);
+
+        // 2️⃣ Truncate dữ liệu
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
         DB::table('activity_logs')->truncate();
         DB::table('examinee_answers')->truncate();
         DB::table('examinee_test_mixes')->truncate();
 
-        return redirect()->back()->with('message', 'Flush council turn data successfully.');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+        // 3️⃣ Trả file backup cho người dùng tải về
+        return response()->download($path)->deleteFileAfterSend(true);
     }
 
     public function activeRooms(Request $request){

@@ -329,6 +329,14 @@ Route::prefix('exam')
     Route::post('/examinee-import/{operation}', [CouncilController::class, 'examineeImport']);
     Route::post('/examinee-import/{operation}/{id}', [CouncilController::class, 'examineeImport']);
 
+    // examinee logs
+    Route::get('/examinee-logs/{username?}', [CouncilController::class, 'examineeLogs']);
+    Route::get('/examinee-logs/{username?}/{operation}', [CouncilController::class, 'examineeLogs']);
+    Route::get('/examinee-logs/{username?}/{operation}/{id}', [CouncilController::class, 'examineeLogs']);
+    Route::post('/examinee-logs/{username?}', [CouncilController::class, 'examineeLogs']);
+    Route::post('/examinee-logs/{username?}/{operation}', [CouncilController::class, 'examineeLogs']);
+    Route::post('/examinee-logs/{username?}/{operation}/{id}', [CouncilController::class, 'examineeLogs']);
+
     //import examinee list
     Route::post('/import-examinee', [CouncilController::class, 'importExaminee']);
     //import room list

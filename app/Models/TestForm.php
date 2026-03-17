@@ -14,6 +14,7 @@ class TestForm extends Model
         'code',
         'name',
         'desc',
+        'time',
         'no_questions',
         'no_parts'
     ];

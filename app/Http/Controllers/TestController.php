@@ -1175,7 +1175,7 @@ class TestController extends Controller
                     'name' => $test_form->name,
                     'time' => $test_form->time,
                     'no_questions' => $test_form->no_questions,
-                    'no_part' => $test_form->no_part,
+                    'no_parts' => $test_form->no_parts,
                     'status' => $test_form->status,
                 );
             }
@@ -1419,6 +1419,7 @@ class TestController extends Controller
 
         $body = $test_mixes_content['body'];
         $test_form_array = $body['test_form'];
+        // dd($test_form_array);
         foreach($test_form_array as $test_form){
             if(!(TestForm::where('id',$test_form['id'])->count())){
                 TestForm::create($test_form);
@@ -1426,9 +1427,9 @@ class TestController extends Controller
                 $t_form = TestForm::find($test_form['id']);
                 $t_form->code = $test_form['code'];
                 $t_form->name = $test_form['name'];
-                $t_form->time = $test_form['time'];
+                $t_form->time = $test_form['time']?$test_form['time']:45;
                 $t_form->no_questions = $test_form['no_questions'];
-                $t_form->no_parts = $test_form['no_parts'];
+                $t_form->no_parts = isset($test_form['no_parts'])?$test_form['no_parts']:2;
                 $t_form->status = $test_form['status'];
                 $t_form->save();
             }

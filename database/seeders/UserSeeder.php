@@ -69,27 +69,27 @@ class UserSeeder extends Seeder
         ]);
 
         //editor role
-        for($i = 1; $i <= 10; $i++){
-            $username = 'nhapde_' . $i;
-            $fullname = 'Cán bộ nhập đề ' . $i;
-            $password = $this->getRandomString(6);
-            $role_id = 3;
-            $org_id = 1;
-            $user = User::factory()->create([
-                'email' => $username,
-                'name' => $fullname,
-                'password' => $password,
-            ]);
-            $user->roles()->attach($role_id);
-            Monitor::create([
-                'code' => $username,
-                'name' => $fullname,
-                'password' => $password,
-                'role_id' => $role_id,
-                'user_id' => $user->id,
-                'organization_id' => $org_id,
-            ]);
-        }
+        // for($i = 1; $i <= 10; $i++){
+        //     $username = 'nhapde_' . $i;
+        //     $fullname = 'Cán bộ nhập đề ' . $i;
+        //     $password = $this->getRandomString(6);
+        //     $role_id = 3;
+        //     $org_id = 1;
+        //     $user = User::factory()->create([
+        //         'email' => $username,
+        //         'name' => $fullname,
+        //         'password' => $password,
+        //     ]);
+        //     $user->roles()->attach($role_id);
+        //     Monitor::create([
+        //         'code' => $username,
+        //         'name' => $fullname,
+        //         'password' => $password,
+        //         'role_id' => $role_id,
+        //         'user_id' => $user->id,
+        //         'organization_id' => $org_id,
+        //     ]);
+        // }
 
         $orgs = Organization::all();
         
