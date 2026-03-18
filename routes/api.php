@@ -67,6 +67,12 @@ Route::prefix('chamthi')->group(function () {
     Route::post('/post-rubric-score', [ExamController::class, 'postRubricScore'])->middleware([JwtMiddleware::class]);
 });
 
+// Route::get('/ping', function () {
+//     return response()->json([], 200);
+// });
 Route::get('/ping', function () {
-    return response()->json([], 200);
+    return response()->json([
+        'success' => true,
+        'message' => 'pong'
+    ]);
 });

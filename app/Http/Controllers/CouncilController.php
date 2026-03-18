@@ -608,7 +608,7 @@ class CouncilController extends Controller
             ->fieldType('start_at','datetime')
             ->setPrimaryKey('code', 'rooms')
             // ->setPrimaryKey('code', 'council_turns')
-            ->setRelationNtoN('rooms', 'council_turn_rooms', 'rooms', 'council_turn_code', 'room_code', 'code')
+            ->setRelationNtoN('rooms', 'council_turn_rooms', 'rooms', 'council_turn_code', 'room_code', 'code', null, ['organization_code' => $council->organization_code])
 			->unsetAdd()
 			->unsetDelete()
 			->unsetEditFields(['created_at', 'updated_at', 'deleted_at'])
@@ -1197,9 +1197,9 @@ class CouncilController extends Controller
         });
 
         $crud->setActionButton('Khôi phục', 'fa fa-retweet', function ($row) {
-            $_user = User::find($row->user_id);
-            $url = url('exam/restore-logs/' . $_user->username);
-            return "javascript:if(confirm('Bạn có chắc chắn muốn khôi phục dữ liệu bài thi cho tài khoản{$_user->username}?')){ window.location.href='$url'; }";
+            $url = '';
+            // $url = url('exam/restore-logs/' . $row->username);
+            return "javascript:if(confirm('Bạn có chắc chắn muốn khôi phục dữ liệu bài thi cho tài khoản{$row->username}?')){ window.location.href='$url'; }";
             // return '/exam/restore-logs/' . $row->id;
             return '';
         }, false);
