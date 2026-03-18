@@ -1483,9 +1483,9 @@ class EvaluationController extends Controller
                 'finish_at' => 'Ngày kết thúc',
             ])
             ->setPrimaryKey('examinee_test_code', 'examinee_test_mixes')
-            ->setRelation('subject_id', 'subjects', 'desc', ['id' => 5])
+            ->setRelation('subject_id', 'subjects', 'desc')
             ->setRelationNtoN('examiners', 'reviewer_pair_details', 'monitors', 'reviewer_pair_id', 'reviewer_id', '{name}',null,['role_id' => 6])
-            ->setRelationNtoN('examinee_tests', 'reviewer_pair_assignments', 'examinee_test_mixes', 'reviewer_pair_id', 'examinee_test_code', '{examinee_test_code}',null,['subject_id' => 5])
+            ->setRelationNtoN('examinee_tests', 'reviewer_pair_assignments', 'examinee_test_mixes', 'reviewer_pair_id', 'examinee_test_code', '{examinee_test_code}')
             ->addFields([
                 'code', 
                 'subject_id',
