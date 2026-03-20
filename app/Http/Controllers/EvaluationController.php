@@ -448,7 +448,7 @@ class EvaluationController extends Controller
         
         // return $this->_example_output($output, $title, $cat, $subcat);
 
-        $form_url = '/exam/import-council';
+        $form_url = url('/exam/import-council');
         
         return $this->_example_output($output, $title, $cat, $subcat, [
             'form_url' => $form_url,
