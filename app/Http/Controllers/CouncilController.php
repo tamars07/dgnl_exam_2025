@@ -869,7 +869,7 @@ class CouncilController extends Controller
 
         $output = $crud->render();
 
-        $form_url = '/test/import-testdata/' . $code;
+        $form_url = url('/test/import-testdata/' . $code);
         
         return $this->_example_output($output, $title, $cat, $subcat, [
             'form_url' => $form_url,
